@@ -1,0 +1,61 @@
+{
+  "models": [
+    {
+      "id": "flan-t5-small",
+      "name": "Flan-T5 Small (Bundled)",
+      "description": "Lightweight text-to-text model optimized for summarization, translation, and instruction-following. Bundled and ready to use!",
+      "size": "357MB",
+      "capabilities": ["summarization", "text-generation", "question-answering", "translation"],
+      "url": "/models/flan-t5-small",
+      "modelType": "t5",
+      "bundled": true,
+      "recommended": true,
+      "config": {
+        "maxTokens": 512,
+        "temperature": 0.7,
+        "topP": 0.9,
+        "encoderPath": "/models/flan-t5-small/encoder_model.onnx",
+        "decoderPath": "/models/flan-t5-small/decoder_model_merged.onnx",
+        "tokenizerPath": "/models/flan-t5-small/tokenizer.json",
+        "configPath": "/models/flan-t5-small/config.json"
+      }
+    },
+    {
+      "id": "tinyllama",
+      "name": "TinyLlama 1.1B",
+      "description": "A compact language model optimized for chat and text generation",
+      "size": "637MB",
+      "capabilities": ["chat", "text-generation"],
+      "url": "/models/tinyllama.onnx",
+      "config": {
+        "maxTokens": 2048,
+        "temperature": 0.7,
+        "topP": 0.9
+      }
+    },
+    {
+      "id": "phi3-mini",
+      "name": "Phi-3 Mini",
+      "description": "Microsoft's efficient small language model",
+      "size": "2.3GB",
+      "capabilities": ["chat", "text-generation", "reasoning"],
+      "url": "/models/phi3-mini.onnx",
+      "config": {
+        "maxTokens": 4096,
+        "temperature": 0.7,
+        "topP": 0.95
+      }
+    },
+    {
+      "id": "distilbert",
+      "name": "DistilBERT",
+      "description": "Lightweight BERT model for document analysis and classification",
+      "size": "255MB",
+      "capabilities": ["document-analysis", "classification", "embedding"],
+      "url": "/models/distilbert.onnx",
+      "config": {
+        "maxSequenceLength": 512
+      }
+    }
+  ]
+}

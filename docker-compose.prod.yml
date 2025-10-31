@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  offline-ai-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - user-data:/data
+      - ./ssl:/etc/nginx/ssl:ro
+    environment:
+      - NODE_ENV=production
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  user-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data

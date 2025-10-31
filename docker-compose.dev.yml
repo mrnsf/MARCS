@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  offline-ai-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    ports:
+      - "3000:3000"
+      - "5173:5173"  # Vite dev server
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./models:/app/public/models:ro
+      - user-data:/app/data
+    environment:
+      - NODE_ENV=development
+      - VITE_MODEL_PATH=/models
+      - VITE_STORAGE_QUOTA=5GB
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  user-data:
+    driver: local

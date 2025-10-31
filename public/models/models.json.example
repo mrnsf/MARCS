@@ -1,0 +1,133 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-30",
+  "models": [
+    {
+      "id": "gpt2-small",
+      "name": "GPT-2 Small",
+      "description": "OpenAI's GPT-2 small model - great for conversational AI and text generation. Balanced performance and quality.",
+      "path": "/models/gpt2-small.onnx",
+      "size": "548MB",
+      "quantization": "fp32",
+      "format": "onnx",
+      "capabilities": ["chat", "text-generation", "completion"],
+      "maxTokens": 1024,
+      "temperature": 0.8,
+      "topP": 0.9,
+      "recommended": true,
+      "performance": {
+        "speed": "fast",
+        "memory": "512MB",
+        "quality": "good"
+      }
+    },
+    {
+      "id": "gpt2-small-int8",
+      "name": "GPT-2 Small (INT8 Quantized)",
+      "description": "Quantized version of GPT-2 - 2x faster with minimal quality loss. Best for resource-constrained environments.",
+      "path": "/models/gpt2-small-int8.onnx",
+      "size": "274MB",
+      "quantization": "int8",
+      "format": "onnx",
+      "capabilities": ["chat", "text-generation", "completion"],
+      "maxTokens": 1024,
+      "temperature": 0.8,
+      "topP": 0.9,
+      "recommended": true,
+      "performance": {
+        "speed": "very-fast",
+        "memory": "256MB",
+        "quality": "good"
+      }
+    },
+    {
+      "id": "distilgpt2",
+      "name": "DistilGPT-2",
+      "description": "Distilled version of GPT-2 - smaller and faster while maintaining good quality. Perfect for quick responses.",
+      "path": "/models/distilgpt2.onnx",
+      "size": "82MB",
+      "quantization": "fp32",
+      "format": "onnx",
+      "capabilities": ["chat", "text-generation"],
+      "maxTokens": 512,
+      "temperature": 0.8,
+      "topP": 0.9,
+      "recommended": true,
+      "performance": {
+        "speed": "very-fast",
+        "memory": "128MB",
+        "quality": "moderate"
+      }
+    },
+    {
+      "id": "distilbert",
+      "name": "DistilBERT",
+      "description": "Fast and efficient model for document understanding, classification, and embeddings. Not for text generation.",
+      "path": "/models/distilbert.onnx",
+      "size": "256MB",
+      "quantization": "fp32",
+      "format": "onnx",
+      "capabilities": ["analysis", "classification", "embeddings", "qa"],
+      "maxTokens": 512,
+      "temperature": 0.3,
+      "topP": 0.85,
+      "recommended": false,
+      "performance": {
+        "speed": "fast",
+        "memory": "256MB",
+        "quality": "excellent"
+      }
+    },
+    {
+      "id": "tiny-llama",
+      "name": "TinyLlama 1.1B",
+      "description": "Small but capable LLaMA-architecture model. Good balance of size and capability.",
+      "path": "/models/tinyllama-1.1b.onnx",
+      "size": "1.2GB",
+      "quantization": "fp16",
+      "format": "onnx",
+      "capabilities": ["chat", "text-generation", "reasoning"],
+      "maxTokens": 2048,
+      "temperature": 0.7,
+      "topP": 0.95,
+      "recommended": false,
+      "performance": {
+        "speed": "moderate",
+        "memory": "1GB",
+        "quality": "very-good"
+      }
+    },
+    {
+      "id": "phi-2",
+      "name": "Phi-2",
+      "description": "Microsoft's 2.7B parameter model with impressive reasoning capabilities for its size.",
+      "path": "/models/phi-2.onnx",
+      "size": "2.8GB",
+      "quantization": "fp16",
+      "format": "onnx",
+      "capabilities": ["chat", "reasoning", "code-generation", "analysis"],
+      "maxTokens": 2048,
+      "temperature": 0.7,
+      "topP": 0.9,
+      "recommended": false,
+      "performance": {
+        "speed": "slow",
+        "memory": "2GB",
+        "quality": "excellent"
+      }
+    }
+  ],
+  "recommendations": {
+    "chat": ["gpt2-small-int8", "distilgpt2", "gpt2-small"],
+    "analysis": ["distilbert"],
+    "lightweight": ["distilgpt2", "gpt2-small-int8"],
+    "quality": ["phi-2", "tiny-llama", "gpt2-small"]
+  },
+  "notes": [
+    "Quantized models (INT8, INT4) are faster and use less memory",
+    "FP16 models require browser support for Float16Array",
+    "Recommended models are marked for first-time users",
+    "Check browser console for detailed loading progress",
+    "Models can be loaded/unloaded dynamically to manage memory"
+  ]
+}

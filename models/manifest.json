@@ -1,0 +1,45 @@
+{
+  "models": [
+    {
+      "id": "tinyllama-1.1b",
+      "name": "TinyLlama 1.1B Chat",
+      "description": "Ultra-lightweight language model optimized for chat",
+      "size": "2.2GB",
+      "quantization": "int8",
+      "format": "onnx",
+      "file": "tinyllama-1.1b.onnx",
+      "capabilities": ["chat", "text-generation"],
+      "maxTokens": 2048,
+      "temperature": 0.7,
+      "topP": 0.9
+    },
+    {
+      "id": "phi-3-mini",
+      "name": "Phi-3 Mini 4K",
+      "description": "Microsoft's efficient small language model",
+      "size": "2.4GB",
+      "quantization": "int4",
+      "format": "onnx",
+      "file": "phi-3-mini.onnx",
+      "capabilities": ["chat", "text-generation", "reasoning"],
+      "maxTokens": 4096,
+      "temperature": 0.7,
+      "topP": 0.9
+    },
+    {
+      "id": "distilbert-base",
+      "name": "DistilBERT Base",
+      "description": "Lightweight BERT model for text understanding",
+      "size": "250MB",
+      "quantization": "fp32",
+      "format": "onnx",
+      "file": "distilbert-base.onnx",
+      "capabilities": ["text-classification", "sentiment-analysis", "feature-extraction"],
+      "maxTokens": 512,
+      "temperature": 1.0,
+      "topP": 1.0
+    }
+  ],
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-01T00:00:00Z"
+}

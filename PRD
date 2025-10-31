@@ -1,0 +1,513 @@
+# Product Requirements Document (PRD)
+## Offline AI Note-Taking & Summarization Platform
+
+**Product Name**: MARCS (Markdown AI Research & Content Summarizer)
+**Version**: 1.0.0
+**Date**: October 30, 2025
+**Status**: Active Development
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+### 1.1 Product Vision
+A privacy-first, offline-capable note-taking application that uses local AI models to automatically summarize notes, documents, and content without sending any data to external servers.
+
+### 1.2 Core Value Proposition
+- **100% Offline**: All processing happens locally in the browser using ONNX Runtime
+- **Privacy-First**: No data ever leaves your device
+- **AI-Powered**: Automatic summarization of notes and documents using local AI models
+- **Fast & Lightweight**: Works on desktop and mobile browsers
+- **No Subscriptions**: Free to use, no cloud services required
+
+### 1.3 Target Users
+- Students taking lecture notes
+- Researchers organizing papers and literature
+- Professionals managing meeting notes
+- Writers collecting research and ideas
+- Anyone concerned about data privacy
+
+---
+
+## 2. CORE FEATURES
+
+### 2.1 Note Taking
+**Priority**: P0 (Must Have)
+
+#### Requirements:
+- **Quick Capture**: Fast note creation with title and content
+- **Markdown Support**: Full markdown rendering and editing
+- **Rich Text Editor**: Intuitive editing experience with markdown preview
+- **Auto-Save**: Automatic saving as user types (debounced)
+- **Timestamps**: Track creation and modification dates
+- **Tags/Labels**: Organize notes with custom tags
+- **Search**: Full-text search across all notes
+- **Folder/Notebook Organization**: Hierarchical note organization
+
+#### User Stories:
+- As a user, I want to quickly create a new note without any setup
+- As a user, I want my notes to auto-save so I never lose content
+- As a user, I want to organize notes with tags and folders
+- As a user, I want to search through all my notes instantly
+
+### 2.2 AI Summarization
+**Priority**: P0 (Must Have)
+
+#### Requirements:
+- **Single Note Summary**: Summarize individual notes with one click
+- **Bullet Point Summaries**: Generate concise bullet-point summaries
+- **Paragraph Summaries**: Generate flowing paragraph summaries
+- **Key Points Extraction**: Extract main ideas and key points
+- **Multi-Note Synthesis**: Summarize multiple selected notes together
+- **Document Upload & Summary**: Upload PDFs/docs and get AI summaries
+- **Adjustable Summary Length**: Short, medium, or detailed summaries
+- **Copy Summary**: Easy copy-to-clipboard functionality
+
+#### User Stories:
+- As a user, I want to summarize a long note into key bullet points
+- As a user, I want to summarize multiple related notes into one overview
+- As a user, I want to upload a PDF and get an instant summary
+- As a user, I want to choose how detailed the summary should be
+
+### 2.3 Offline Storage
+**Priority**: P0 (Must Have)
+
+#### Requirements:
+- **IndexedDB Primary**: Fast client-side storage for notes
+- **SQLite Backup**: Structured database with SQL queries
+- **Data Export**: Export all notes to JSON, Markdown, or plain text
+- **Data Import**: Import notes from JSON or markdown files
+- **Storage Stats**: Show how much storage is being used
+- **Backup/Restore**: Export database for backup, import to restore
+
+#### User Stories:
+- As a user, I want all my notes stored locally on my device
+- As a user, I want to export my notes to take them elsewhere
+- As a user, I want to backup my entire note database
+
+### 2.4 Document Processing
+**Priority**: P1 (Should Have)
+
+#### Requirements:
+- **File Upload**: Support TXT, MD, PDF, DOC, DOCX, JSON, HTML
+- **Text Extraction**: Extract text content from uploaded files
+- **Save as Note**: Convert uploaded documents into notes
+- **Batch Processing**: Upload and process multiple documents at once
+- **Document Library**: Browse uploaded documents separately from notes
+
+#### User Stories:
+- As a user, I want to upload PDF research papers and convert them to notes
+- As a user, I want to upload multiple documents at once
+- As a user, I want to see a library of all uploaded documents
+
+---
+
+## 3. USER INTERFACE REQUIREMENTS
+
+### 3.1 Layout
+- **Sidebar Navigation**: Quick access to all sections
+  - Notes (default view)
+  - Documents
+  - AI Summarizer
+  - Models
+  - Settings
+- **Main Content Area**: Display notes, editor, or summaries
+- **Quick Actions Bar**: Create note, upload document, summarize
+- **Search Bar**: Always accessible at top
+
+### 3.2 Notes View
+- **List View**: Show all notes as cards or list items
+  - Note title
+  - First few lines preview
+  - Tags
+  - Last modified date
+- **Grid View Option**: Display notes as cards in a grid
+- **Sort Options**: By date, title, or tags
+- **Filter Options**: Filter by tags, date range
+
+### 3.3 Note Editor
+- **Split View**: Markdown editor on left, preview on right
+- **Full Screen Mode**: Distraction-free writing
+- **Character/Word Count**: Show writing statistics
+- **Formatting Toolbar**: Quick access to markdown formatting
+- **Tag Input**: Add/remove tags inline
+- **Summarize Button**: Generate summary of current note
+
+### 3.4 AI Summarizer
+- **Input Area**: Select notes or upload documents
+- **Summary Options**:
+  - Summary type (bullet points, paragraph, key points)
+  - Length (short, medium, detailed)
+  - Number of points (for bullet summaries)
+- **Output Area**: Display generated summary
+- **Copy/Save Actions**: Save summary as new note or copy
+
+---
+
+## 4. TECHNICAL REQUIREMENTS
+
+### 4.1 AI Model Integration
+**Priority**: P0
+
+#### Requirements:
+- **ONNX Runtime Web**: Use ONNX models for local inference
+- **Model Types Supported**:
+  - Summarization models (T5, BART, Pegasus)
+  - Text generation models (GPT-2, DistilGPT-2)
+  - Sentence embeddings (DistilBERT, MiniLM)
+- **Model Management**:
+  - Load/unload models dynamically
+  - Show model status and performance metrics
+  - Support multiple models for different tasks
+- **Performance**:
+  - Process notes up to 10,000 characters
+  - Generate summaries in under 10 seconds
+  - Use Web Workers to prevent UI blocking
+
+### 4.2 Offline Capabilities
+**Priority**: P0
+
+#### Requirements:
+- **Progressive Web App (PWA)**: Installable on desktop and mobile
+- **Service Worker**: Cache all assets for offline use
+- **IndexedDB**: Store all notes and documents locally
+- **No External Calls**: Zero network requests after initial load
+- **File System Access API**: Direct file read/write (where supported)
+
+### 4.3 Data Architecture
+**Priority**: P0
+
+#### Schema:
+```typescript
+// Note Schema
+interface Note {
+  id: string;
+  title: string;
+  content: string;       // Markdown content
+  summary?: string;      // AI-generated summary
+  tags: string[];
+  folder?: string;
+  created: number;       // timestamp
+  updated: number;       // timestamp
+  wordCount: number;
+  metadata: {
+    summaryGenerated?: number;  // timestamp
+    summaryModel?: string;
+    summaryLength?: 'short' | 'medium' | 'detailed';
+  };
+}
+
+// Document Schema
+interface Document {
+  id: string;
+  name: string;
+  type: string;          // MIME type
+  size: number;
+  content: string;       // Extracted text
+  summary?: string;
+  tags: string[];
+  created: number;
+  updated: number;
+  metadata: {
+    originalFilename: string;
+    extractedBy: string;
+  };
+}
+```
+
+### 4.4 Browser Support
+**Priority**: P1
+
+- Chrome 90+ (recommended)
+- Edge 90+
+- Firefox 88+
+- Safari 14+
+- Mobile browsers with WebAssembly support
+
+---
+
+## 5. USER WORKFLOWS
+
+### 5.1 Quick Note Workflow
+1. User clicks "New Note" button
+2. Editor opens with focus on title field
+3. User types title and content (markdown)
+4. Note auto-saves every 2 seconds
+5. User adds tags (optional)
+6. User closes editor - note is saved
+
+### 5.2 Summarize Note Workflow
+1. User opens existing note in editor
+2. User clicks "Summarize" button
+3. Summary options modal appears
+4. User selects summary type and length
+5. AI generates summary (shows progress)
+6. Summary appears below content or in sidebar
+7. User can copy, edit, or save summary as new note
+
+### 5.3 Multi-Note Summary Workflow
+1. User goes to Notes view
+2. User selects multiple notes (checkbox selection)
+3. User clicks "Summarize Selected" button
+4. AI synthesizes all selected notes
+5. Combined summary is generated
+6. User can save as new note
+
+### 5.4 Document Upload & Summarize Workflow
+1. User clicks "Upload Document"
+2. File picker opens
+3. User selects PDF/DOC/TXT file(s)
+4. Text is extracted from document
+5. Document saved to Documents library
+6. AI automatically generates summary
+7. User can convert to note or keep as document
+
+---
+
+## 6. AI SUMMARIZATION REQUIREMENTS
+
+### 6.1 Summarization Types
+
+#### Bullet Point Summary
+- Extract 3-10 key points
+- Each point: 10-20 words
+- Use clear, concise language
+- Prioritize most important information
+
+#### Paragraph Summary
+- 2-4 sentences
+- Cover main ideas cohesively
+- Maintain logical flow
+- Suitable for quick overviews
+
+#### Detailed Summary
+- 3-5 paragraphs
+- Include supporting details
+- Preserve important context
+- Useful for comprehensive reviews
+
+#### Key Points Extraction
+- Extract specific data: dates, names, numbers
+- Identify action items
+- Highlight important quotes
+- List main topics/themes
+
+### 6.2 Quality Requirements
+- **Accuracy**: Summary must reflect actual content
+- **Coherence**: Summaries must be readable and logical
+- **Conciseness**: Remove redundancy and filler
+- **Relevance**: Focus on most important information
+- **Speed**: Generate summaries in <10 seconds for typical notes
+
+---
+
+## 7. NON-FUNCTIONAL REQUIREMENTS
+
+### 7.1 Performance
+- **App Load Time**: <2 seconds on 3G connection
+- **Note Creation**: Instant (no lag)
+- **Search Results**: <500ms for 1000+ notes
+- **Model Load Time**: <5 seconds for typical models
+- **Inference Time**: <10 seconds for 5000 character notes
+
+### 7.2 Storage
+- **Notes**: Store up to 10,000 notes per user
+- **Documents**: Store up to 1GB of documents
+- **Database Size**: Optimize to stay under 2GB
+- **Cleanup**: Provide tools to delete old notes/documents
+
+### 7.3 Security & Privacy
+- **No Telemetry**: Zero analytics or tracking
+- **No External APIs**: No third-party service calls
+- **Local Only**: All data stays on user's device
+- **Export Control**: User controls all data exports
+- **Clear Permissions**: Transparent about file access
+
+### 7.4 Accessibility
+- **Keyboard Navigation**: Full keyboard support
+- **Screen Readers**: ARIA labels on all interactive elements
+- **Color Contrast**: WCAG AA compliance
+- **Font Sizing**: Adjustable text size
+
+---
+
+## 8. OUT OF SCOPE (V1)
+
+### Will NOT Include:
+- L Cloud sync across devices
+- L Collaboration/sharing features
+- L Mobile native apps (PWA only)
+- L Voice-to-text notes
+- L Image/video storage in notes
+- L Calendar integration
+- L Reminders/notifications
+- L Version history/note revisions
+- L End-to-end encryption (data never leaves device anyway)
+- L Multi-language AI models (English only V1)
+
+---
+
+## 9. SUCCESS METRICS
+
+### 9.1 Technical Metrics
+- **App loads successfully**: 99% success rate
+- **Notes save without errors**: 99.9% success rate
+- **AI summaries complete**: 95% success rate
+- **Offline functionality works**: 100% of the time
+
+### 9.2 User Experience Metrics
+- **Time to first note**: <30 seconds from landing
+- **Summary accuracy**: User satisfaction with summaries
+- **Performance**: No lag or freezing during use
+- **Storage efficiency**: Average note size <50KB
+
+---
+
+## 10. IMPLEMENTATION PHASES
+
+### Phase 1: Core Note Taking (Week 1-2)
+- Note CRUD operations
+- Markdown editor with preview
+- Auto-save functionality
+- Tags and folders
+- Search
+
+### Phase 2: AI Summarization (Week 3-4)
+- ONNX model integration
+- Single note summarization
+- Bullet point generation
+- Summary options (length, type)
+- Model management UI
+
+### Phase 3: Document Processing (Week 5)
+- File upload
+- Text extraction
+- Document library
+- Document summarization
+- Batch processing
+
+### Phase 4: Polish & Optimization (Week 6)
+- Performance optimization
+- UI/UX improvements
+- Mobile responsive design
+- PWA features
+- Accessibility improvements
+
+---
+
+## 11. TECHNICAL STACK
+
+### Frontend
+- **Framework**: React 18 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **State Management**: React Context + Hooks
+- **Markdown**: marked.js or remark
+- **Editor**: Custom textarea with markdown preview
+
+### AI/ML
+- **Runtime**: ONNX Runtime Web
+- **Models**: Optimized ONNX format models
+- **Worker**: Web Workers via Comlink
+- **Inference**: WebAssembly (WASM)
+
+### Storage
+- **Primary**: IndexedDB (via idb library)
+- **Secondary**: sql.js (SQLite in browser)
+- **Export**: JSON, Markdown, Plain text
+
+### PWA
+- **Service Worker**: Workbox
+- **Manifest**: Full PWA manifest
+- **Icons**: Multiple sizes for all platforms
+
+---
+
+## 12. RISKS & MITIGATIONS
+
+### Risk 1: Browser Memory Limits
+**Impact**: Large models may crash browser
+**Mitigation**:
+- Use quantized models (INT8, INT4)
+- Provide model size warnings
+- Implement memory monitoring
+- Unload models when not in use
+
+### Risk 2: Slow AI Inference
+**Impact**: Users wait too long for summaries
+**Mitigation**:
+- Use smaller, faster models by default
+- Show progress indicators
+- Allow summary cancellation
+- Recommend desktop browsers
+
+### Risk 3: Storage Quota Exceeded
+**Impact**: Can't save new notes
+**Mitigation**:
+- Monitor storage usage
+- Show warnings at 80% capacity
+- Provide cleanup tools
+- Enable export before deletion
+
+### Risk 4: Poor Summary Quality
+**Impact**: Users don't trust AI summaries
+**Mitigation**:
+- Use proven summarization models
+- Allow manual editing of summaries
+- Provide multiple summary options
+- Show model confidence scores
+
+---
+
+## 13. APPENDIX
+
+### A. Example Use Cases
+
+#### Use Case 1: Student Taking Lecture Notes
+1. Student opens app during lecture
+2. Creates new note with lecture title
+3. Types notes in markdown as professor speaks
+4. After lecture, clicks "Summarize"
+5. Gets bullet-point summary of key concepts
+6. Tags note with course name and topic
+7. Reviews summary before exam
+
+#### Use Case 2: Researcher Reading Papers
+1. Researcher downloads PDF paper
+2. Uploads PDF to app
+3. Text extracted automatically
+4. AI generates detailed summary
+5. Researcher converts to note
+6. Adds own comments and insights
+7. Searches across multiple paper notes later
+
+#### Use Case 3: Professional Meeting Notes
+1. Professional creates note during meeting
+2. Types action items and discussions
+3. After meeting, generates summary
+4. Summary extracts all action items
+5. Copies summary to email
+6. Original note archived with tags
+
+### B. Data Privacy Guarantees
+
+**What We DO**:
+ Store all data in your browser's IndexedDB
+ Process everything locally with ONNX models
+ Allow you to export your data anytime
+ Work completely offline after first load
+ Use only local storage APIs
+
+**What We DON'T DO**:
+L Send any data to external servers
+L Use cloud APIs for AI processing
+L Track analytics or user behavior
+L Require accounts or authentication
+L Access data outside your browser
+
+---
+
+**Document Status**: Draft ’ Review ’ **Approved**
+**Next Review Date**: November 30, 2025
+**Owner**: Development Team
+**Stakeholders**: Product, Engineering, UX
