@@ -9,6 +9,7 @@ export interface AIModelConfig {
   description: string;
   capabilities: string[];
   loaded: boolean;
+  modelType?: 't5' | 'decoder' | 'encoder';
 }
 
 export interface GenerationOptions {
@@ -90,7 +91,9 @@ class AIService {
     }
 
     try {
-      const success = await this.aiWorker.loadModel(modelName, modelConfig.path);
+      // Get model type from config, default to 'decoder' if not specified
+      const modelType = modelConfig.modelType || 'decoder';
+      const success = await this.aiWorker.loadModel(modelName, modelConfig.path, modelType);
       if (success) {
         modelConfig.loaded = true;
       }
